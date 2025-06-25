@@ -15,6 +15,13 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+# --- 追加ここから ------------------------------------------------------
+- task: UseDotNet@2           # .NET 8 SDK を取得し PATH に追加
+  inputs:
+    packageType: 'sdk'
+    version: '8.0.x'          # 8 系最新パッチ
+    includePreviewVersions: false  # preview が欲しければ true に
+# --- 追加ここまで ------------------------------------------------------
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
@@ -23,6 +30,7 @@ steps:
 
 - task: VSBuild@1
   inputs:
+    vsVersion: '17.14' 
     solution: '$(solution)'
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
     platform: '$(buildPlatform)'
